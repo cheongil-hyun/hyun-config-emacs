@@ -86,6 +86,17 @@
 (global-set-key "\M-?" 'etags-select-find-tag-at-point)
 (global-set-key "\M-." 'etags-select-find-tag)
 
+;; -----------------------------------------------------------------------
+;; C 들여쓰기 기본 스타일 설정
+;; -----------------------------------------------------------------------
+(setq c-default-style "linux")
+;; (setq c-default-style "k&r")
+;; (setq c-default-style "cc-mode")
+;; (setq c-default-style "gnu")
+;; (setq c-default-style "bsd")
+;; (setq c-default-style "stroustrup")
+;; (setq c-default-style "whitesmith")
+
 ;; ----------------------------------------------------------------------------
 ;; configuration for enablling the recurive deleting directory
 ;; ----------------------------------------------------------------------------
