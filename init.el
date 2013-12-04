@@ -41,6 +41,8 @@
 ;; adding xcscope.el
 ;; ----------------------------------------------------------------------------
 (load-library "~/.emacs.d/packages/xcscope.el")
+(require 'xcscope)
+(setq cscope-do-not-update-database t)  ;; do not update the cscope files
 
 ;; ----------------------------------------------------------------------------
 ;; ediff-trees.elff
