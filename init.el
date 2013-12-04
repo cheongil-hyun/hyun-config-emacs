@@ -113,6 +113,14 @@
 ;; (setq c-default-style "stroustrup")
 ;; (setq c-default-style "whitesmith")
 
+;; -----------------------------------------------------------------------
+; 유니코드 한글영역...NanumGothicCoding에다가 원하는폰트를 적는다
+;; -----------------------------------------------------------------------
+(set-fontset-font "fontset-default" '(#x1100 . #xffdc)  '("나눔고딕코딩" . "unicode-bmp")) 
+(set-fontset-font "fontset-default" '(#xe0bc . #xf66e)  '("나눔고딕코딩" . "unicode-bmp")) 
+(set-fontset-font "fontset-default" 'kana '("Meiryo" . "unicode-bmp"))
+(set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
+
 ;; ----------------------------------------------------------------------------
 ;; configuration for enablling the recurive deleting directory
 ;; ----------------------------------------------------------------------------
