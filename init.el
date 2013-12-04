@@ -5,6 +5,14 @@
 (require 'better-defaults)
 
 ;; ----------------------------------------------------------------------------
+;; adding the package sources
+;; ----------------------------------------------------------------------------
+(require 'package)
+(dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")))
+  (add-to-list 'package-archives source t))
+(package-initialize)
+
+;; ----------------------------------------------------------------------------
 ;; display the column number on bottom bar
 ;; ----------------------------------------------------------------------------
 (column-number-mode 1) ; display column number on status bar
