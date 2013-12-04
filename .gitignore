@@ -2,3 +2,5 @@
 *.tar
 auto-save-list
 places
+backups
+archives
