@@ -10,6 +10,11 @@
 (column-number-mode 1) ; display column number on status bar
 
 ;; ----------------------------------------------------------------------------
+;; setting for welcom screen : disable
+;; ----------------------------------------------------------------------------
+(setq inhibit-splash-screen t)
+
+;; ----------------------------------------------------------------------------
 ;; disable the backup
 ;; ----------------------------------------------------------------------------
 (setq backup-inhibited t)
@@ -70,7 +75,7 @@
 ;; emacs server settings
 ;; ----------------------------------------------------------------------------
 (if (not (equal window-system 'nil))
-	(require 'server) (when (and (= emacs-major-version 23) (= emacs-minor-version 4) (equal window-system 'w32)) (defun server-ensure-safe-dir (dir) "Noop" t))
+	(require 'server) (when (and (window-system 'w32)) (defun server-ensure-safe-dir (dir) "Noop" t))
 	;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
 	(server-start)
 )
