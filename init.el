@@ -74,11 +74,8 @@
 ;; ----------------------------------------------------------------------------
 ;; emacs server settings
 ;; ----------------------------------------------------------------------------
-(if (not (equal window-system 'nil))
-	(require 'server) (when (and (window-system 'w32)) (defun server-ensure-safe-dir (dir) "Noop" t))
-	;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
-	(server-start)
-)
+(require 'server) 
+(server-start)
 
 ;; ----------------------------------------------------------------------------
 ;; Cygwin Setting for cygwin-mount.el
