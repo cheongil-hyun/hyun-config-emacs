@@ -23,7 +23,7 @@
 (setq inhibit-splash-screen t)
 
 ;; -----------------------------------------------------------------------
-;; emacs 외부에서 파일 변경시 현재 버퍼 자동으로 다시 읽게 하기
+;; emacs auto reloading when file was changed from external program
 ;; -----------------------------------------------------------------------
 (global-auto-revert-mode 1)
 
@@ -103,7 +103,7 @@
 (global-set-key "\M-." 'etags-select-find-tag)
 
 ;; -----------------------------------------------------------------------
-;; C 들여쓰기 기본 스타일 설정
+;; C coding style setting now linux
 ;; -----------------------------------------------------------------------
 (setq c-default-style "linux")
 ;; (setq c-default-style "k&r")
@@ -114,12 +114,12 @@
 ;; (setq c-default-style "whitesmith")
 
 ;; -----------------------------------------------------------------------
-; 유니코드 한글영역...NanumGothicCoding에다가 원하는폰트를 적는다
+;  korean font setting - cygwin emacs does not support
 ;; -----------------------------------------------------------------------
-(set-fontset-font "fontset-default" '(#x1100 . #xffdc)  '("나눔고딕코딩" . "unicode-bmp")) 
-(set-fontset-font "fontset-default" '(#xe0bc . #xf66e)  '("나눔고딕코딩" . "unicode-bmp")) 
-(set-fontset-font "fontset-default" 'kana '("Meiryo" . "unicode-bmp"))
-(set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
+;; (set-fontset-font "fontset-default" '(#x1100 . #xffdc)  '("Nanumgothiccoding" . "unicode-bmp")) 
+;; (set-fontset-font "fontset-default" '(#xe0bc . #xf66e)  '("Nanumgothiccoding" . "unicode-bmp")) 
+;; (set-fontset-font "fontset-default" 'kana '("Meiryo" . "unicode-bmp"))
+;; (set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
 
 ;; ----------------------------------------------------------------------------
 ;; configuration for enablling the recurive deleting directory
