@@ -130,6 +130,8 @@
 ;; emacs server settings
 ;; ----------------------------------------------------------------------------
 (require 'server) 
+;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
+(if (equal window-system 'w32) (defun server-ensure-safe-dir (dir) "Noop" t))
 (server-start)
 
 ;; ----------------------------------------------------------------------------
