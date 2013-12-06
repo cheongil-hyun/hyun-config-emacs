@@ -135,6 +135,7 @@
 ;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
 (if (equal window-system 'w32) (defun server-ensure-safe-dir (dir) "Noop" t))
 (server-start)
+(remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
 
 ;; ----------------------------------------------------------------------------
 ;; Cygwin Setting for cygwin-mount.el
