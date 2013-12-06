@@ -116,10 +116,12 @@
 ;; ----------------------------------------------------------------------------
 ;  korean font setting - cygwin emacs does not support
 ;; ----------------------------------------------------------------------------
-(set-fontset-font "fontset-default" '(#x1100 . #xffdc)  '("NanumGothicCoding" . "unicode-bmp"))
-(set-fontset-font "fontset-default" '(#xe0bc . #xf66e)  '("NanumGothicCoding" . "unicode-bmp"))
-(set-fontset-font "fontset-default" 'kana '("Meiryo" . "unicode-bmp"))
-(set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
+(when window-system
+  (set-fontset-font "fontset-default" '(#x1100 . #xffdc)  '("NanumGothicCoding" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" '(#xe0bc . #xf66e)  '("NanumGothicCoding" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" 'kana '("Meiryo" . "unicode-bmp"))
+  (set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
+)
 
 ;; ----------------------------------------------------------------------------
 ;; configuration for enablling the recurive deleting directory
