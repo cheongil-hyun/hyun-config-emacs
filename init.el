@@ -59,6 +59,12 @@
 ;; ----------------------------------------------------------------------------
 (load-file "~/.emacs.d/packages/ediff-trees.el")
 
+;; ----------------------------------------------------------------------------
+;; ediff set default to horizontally
+;; ----------------------------------------------------------------------------
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+
 ;; tab, indent
 (setq-default tab-width 4)
 (setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48))
