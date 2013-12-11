@@ -195,3 +195,11 @@
   (browse-url (concat "http://endic.naver.com/search.naver?mode=all&x=0&y=0&query="
                       (thing-at-point 'word))))
 (define-key mode-specific-map "d" 'search-naver-dic)
+(when (eq window-system 'w32)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 98 :width normal)))))
+)
