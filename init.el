@@ -196,6 +196,20 @@
   (browse-url (concat "http://endic.naver.com/search.naver?mode=all&x=0&y=0&query="
                       (thing-at-point 'word))))
 (define-key mode-specific-map "d" 'search-naver-dic)
+
+;;------------------------------------------------------------------------
+;; shell-pop
+;;------------------------------------------------------------------------
+(load-file "~/.emacs.d/packages/shell-pop.el")
+(require 'shell-pop)
+(shell-pop-set-internal-mode "eshell")
+(shell-pop-set-internal-mode-shell "/bin/bash")
+(shell-pop-set-window-height 60) ; the number for the percentage of the selected window.
+(global-set-key [f8] 'shell-pop)
+
+;;------------------------------------------------------------------------
+;; window font setting
+;;------------------------------------------------------------------------
 (when (eq window-system 'w32)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
