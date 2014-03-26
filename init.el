@@ -147,21 +147,22 @@
 ;; ----------------------------------------------------------------------------
 ;; Cygwin Setting for cygwin-mount.el
 ;; ----------------------------------------------------------------------------
-;; (setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
-;; (setq exec-path (cons "c:/cygwin/bin/" exec-path))
-;; (require 'cygwin-mount)
-;; (cygwin-mount-activate)
+(when (eq window-system 'w32)
+  (setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
+  (setq exec-path (cons "c:/cygwin/bin/" exec-path))
+  (require 'cygwin-mount)
+  (cygwin-mount-activate)
 
-;; Replace the dos command window to bash of cygwin
-;; (add-hook 'comint-output-filter-functions
-;; 		  'shell-strip-ctrl-m nil t)
-;; (add-hook 'comint-output-filter-functions
-;; 		  'comint-watch-for-password-prompt nil t)
-;; (setq explicit-shell-file-name "bash.exe")
-;; For subprocesses invoked via the shell
-;; (e.g., "shell -c command")
-;; (setq shell-file-name explicit-shell-file-name)
-
+  ;; Replace the dos command window to bash of cygwin
+  (add-hook 'comint-output-filter-functions
+			'shell-strip-ctrl-m nil t)
+  (add-hook 'comint-output-filter-functions
+			'comint-watch-for-password-prompt nil t)
+  (setq explicit-shell-file-name "bash.exe")
+  ;; For subprocesses invoked via the shell
+  ;; (e.g., "shell -c command")
+  (setq shell-file-name explicit-shell-file-name)
+)
 ;;------------------------------------------------------------------------
 ;; org mode Settings
 ;;------------------------------------------------------------------------
