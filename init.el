@@ -7,6 +7,9 @@
 ;; ----------------------------------------------------------------------------
 ;; adding the package sources
 ;; ----------------------------------------------------------------------------
+(if (< emacs-major-version 24)
+	(load-library "~/.emacs.d/packages/package.el")
+)
 (require 'package)
 (dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
 				  ("melpa" . "http://melpa.milkbox.net/packages/")))
