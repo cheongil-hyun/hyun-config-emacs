@@ -217,7 +217,7 @@
 (shell-pop-set-internal-mode "eshell")
 (shell-pop-set-internal-mode-shell "/bin/bash")
 (shell-pop-set-window-height 60) ; the number for the percentage of the selected window.
-(global-set-key [f8] 'shell-pop)
+(global-set-key [f10] 'shell-pop)
 
 ;;------------------------------------------------------------------------
 ;; mo-git-blame
@@ -236,7 +236,7 @@
 ;;------------------------------------------------------------------------
 ;; my key settings
 ;;------------------------------------------------------------------------
-(global-set-key [f7] 'list-matching-lines)
+(global-set-key [f11] 'list-matching-lines)
 
 ;;------------------------------------------------------------------------
 ;; window font setting
