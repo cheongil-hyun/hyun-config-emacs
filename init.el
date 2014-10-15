@@ -151,6 +151,7 @@
 ;; configuration for auto complete mod
 ;; should be loaded after yasnippet so that they can work together
 ;; ----------------------------------------------------------------------------
+(require 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
 ;;; set the trigger key so that it can work together with yasnippet on tab key,
