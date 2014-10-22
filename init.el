@@ -27,6 +27,11 @@
 (setq inhibit-splash-screen t)
 
 ;; ----------------------------------------------------------------------------
+;; Compilation output buffer auto scroll
+;; ----------------------------------------------------------------------------
+(setq compilation-scroll-output t)
+
+;; ----------------------------------------------------------------------------
 ;; emacs auto reloading when file was changed from external program
 ;; ----------------------------------------------------------------------------
 (global-auto-revert-mode 1)
@@ -257,6 +262,7 @@
 ;; my key settings
 ;;------------------------------------------------------------------------
 (global-set-key [f11] 'list-matching-lines)
+(global-set-key [?\C-x f10] 'compile)
 
 ;;------------------------------------------------------------------------
 ;; window font setting
