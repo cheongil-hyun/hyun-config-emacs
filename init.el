@@ -257,12 +257,14 @@
 (defalias 'em 'find-file)
 (defalias 'emo 'find-file-other-window)
 (defalias 'gg 'vc-git-grep)
+(defalias 'ff 'find-name-dired)
 
 ;;------------------------------------------------------------------------
 ;; my key settings
 ;;------------------------------------------------------------------------
 (global-set-key [f11] 'list-matching-lines)
 (global-set-key [?\C-x f10] 'compile)
+(global-set-key "\M-\]" 'vc-git-grep)
 
 ;;------------------------------------------------------------------------
 ;; window font setting
