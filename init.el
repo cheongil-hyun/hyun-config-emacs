@@ -200,6 +200,29 @@
   ;; (e.g., "shell -c command")
   (setq shell-file-name explicit-shell-file-name)
 )
+;; ----------------------------------------------------------------------------
+;; configuration for coding system to unix default
+;; ----------------------------------------------------------------------------
+;; korean language setting
+(when (equal window-system 'w32)
+  (set-language-environment "Korean")
+  ;; (set-default-coding-systems 'utf-8-unix)
+  (prefer-coding-system 'euc-kr)
+  (set-default-coding-systems 'euc-kr)
+  (set-terminal-coding-system 'euc-kr)
+  (set-keyboard-coding-system 'euc-kr)
+  (set-selection-coding-system 'euc-kr)
+  (setq-default buffer-coding-system 'euc-kr)
+  (setq-default buffer-file-coding-system 'euc-kr)
+  (setq-default file-name-coding-system 'euc-kr)
+  (setq-default locale-coding-system 'euc-kr)
+  (add-hook 'sh-mode-hook'
+            (lambda ()
+              (set-default-coding-systems 'utf-8-unix)
+              ))
+  (setenv "CYGWIN" "nodosfilewarning")
+)
+
 ;;------------------------------------------------------------------------
 ;; org mode Settings
 ;;------------------------------------------------------------------------
