@@ -11,9 +11,10 @@
 	(load-library "~/.emacs.d/packages/package.el")
 )
 (require 'package)
-(dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
-				  ("melpa" . "http://melpa.milkbox.net/packages/")))
-  (add-to-list 'package-archives source t))
+;; (dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
+;; 				  ("melpa" . "http://melpa.milkbox.net/packages/")))
+;;   (add-to-list 'package-archives source t))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
 ;; ----------------------------------------------------------------------------
