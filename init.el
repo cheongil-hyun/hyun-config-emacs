@@ -287,6 +287,16 @@
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
 ;;------------------------------------------------------------------------
+;; magit speed up
+;;------------------------------------------------------------------------
+(setq magit-highlight-indentation nil)
+(setq magit-highlight-trailing-whitespace nil)
+(setq magit-highlight-whitespace nil)
+(setq magit-diff-refine-hunk nil)
+(setq magit-backup-untracked nil)
+(setq magit-have-graph nil)
+
+;;------------------------------------------------------------------------
 ;; my key settings
 ;;------------------------------------------------------------------------
 (defalias 'em 'find-file)
