@@ -309,7 +309,7 @@
 ;;------------------------------------------------------------------------
 (global-set-key [f11] 'list-matching-lines)
 (global-set-key [?\C-x f10] 'compile)
-(global-set-key "\M-\]" 'vc-git-grep)
+(global-set-key "\C-\]" 'vc-git-grep)
 
 ;;------------------------------------------------------------------------
 ;; window font setting
