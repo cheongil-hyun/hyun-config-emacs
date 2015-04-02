@@ -163,6 +163,7 @@
 ;;; set the trigger key so that it can work together with yasnippet on tab key,
 ;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
 ;;; activate, otherwise, auto-complete will
+(global-auto-complete-mode t)
 (ac-set-trigger-key "TAB")
 (ac-set-trigger-key "<tab>")
 
@@ -280,6 +281,12 @@
 (require 'mo-git-blame)
 (global-set-key [?\C-c ?g ?c] 'mo-git-blame-current)
 (global-set-key [?\C-c ?g ?f] 'mo-git-blame-file)
+
+;;------------------------------------------------------------------------
+;; elpy settings for python mode
+;;------------------------------------------------------------------------
+(elpy-enable)
+(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 
 ;;------------------------------------------------------------------------
 ;; iedit mode
