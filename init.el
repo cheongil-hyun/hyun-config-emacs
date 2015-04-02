@@ -284,6 +284,9 @@
 
 ;;------------------------------------------------------------------------
 ;; elpy settings for python mode
+;; you should install first python, and pip
+;; sudo apt-get install python-pip
+;; sudo pip install elpy jedi rope
 ;;------------------------------------------------------------------------
 (elpy-enable)
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
