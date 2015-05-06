@@ -1,10 +1,10 @@
 ;;; pyvenv.el --- Python virtual environment interface -*- lexical-binding: t -*-
 
-;; Copyright (C) 2013, 2014  Jorgen Schaefer <contact@jorgenschaefer.de>
+;; Copyright (C) 2013-2015  Jorgen Schaefer <contact@jorgenschaefer.de>
 
 ;; Author: Jorgen Schaefer <contact@jorgenschaefer.de>
 ;; URL: http://github.com/jorgenschaefer/pyvenv
-;; Version: 1.4
+;; Version: 1.7
 ;; Keywords: Python, Virtualenv, Tools
 
 ;; This program is free software; you can redistribute it and/or
@@ -145,7 +145,9 @@ This is usually the base name of `pyvenv-virtual-env'.")
   (setq directory (expand-file-name directory))
   (pyvenv-deactivate)
   (setq pyvenv-virtual-env directory
-        pyvenv-virtual-env-name (file-name-nondirectory directory))
+        pyvenv-virtual-env-name (file-name-nondirectory directory)
+        python-shell-virtualenv-path directory
+        python-shell-virtualenv-root directory)
   ;; Preserve variables from being overwritten.
   (let ((old-exec-path exec-path)
         (old-process-environment process-environment))
@@ -167,7 +169,7 @@ This is usually the base name of `pyvenv-virtual-env'.")
                               (format "PATH=%s" (mapconcat (lambda (x)
                                                              (or x "."))
                                                            exec-path
-                                                           (if (eq system-type 'windows-nt) ";" ":")))
+                                                           path-separator))
                               ;; No "=" means to unset
                               "PYTHONHOME")
                              process-environment)
@@ -200,7 +202,9 @@ This is usually the base name of `pyvenv-virtual-env'.")
               process-environment old-process-environment)))
     (run-hooks 'pyvenv-post-deactivate-hooks))
   (setq pyvenv-virtual-env nil
-        pyvenv-virtual-env-name nil))
+        pyvenv-virtual-env-name nil
+        python-shell-virtualenv-root nil
+        python-shell-virtualenv-path nil))
 
 (defvar pyvenv-workon-history nil
   "Prompt history for `pyvenv-workon'.")
@@ -218,42 +222,46 @@ This is usually the base name of `pyvenv-virtual-env'.")
                  ;; https://github.com/jorgenschaefer/elpy/issues/144
                  (equal name nil)))
     (pyvenv-activate (format "%s/%s"
-                             (or (getenv "WORKON_HOME")
-                                 "~/.virtualenvs")
+                             (pyvenv-workon-home)
                              name))))
 
-(defun pyvenv-virtualenv-list ()
-  "Prompt the user for a name in $WORKON_HOME."
-  (let ((workon-home (or (getenv "WORKON_HOME")
-                         "~/.virtualenvs"))
+(defun pyvenv-virtualenv-list (&optional noerror)
+  "Prompt the user for a name in $WORKON_HOME.
+
+If NOERROR is set, do not raise an error if WORKON_HOME is not
+configured."
+  (let ((workon-home (pyvenv-workon-home))
         (result nil))
-    (when (not (file-directory-p workon-home))
-      (error "Can't find a workon home directory, set $WORKON_HOME"))
-    (dolist (name (directory-files workon-home))
-      (when (or (file-exists-p (format "%s/%s/bin/activate"
-                                       workon-home name))
-                (file-exists-p (format "%s/%s/Scripts/activate.bat"
-                                       workon-home name)))
-        (setq result (cons name result))))
-    (sort result (lambda (a b)
-                   (string-lessp (downcase a)
-                                 (downcase b))))))
+    (if (not (file-directory-p workon-home))
+        (when (not noerror)
+          (error "Can't find a workon home directory, set $WORKON_HOME"))
+      (dolist (name (directory-files workon-home))
+        (when (or (file-exists-p (format "%s/%s/bin/activate"
+                                         workon-home name))
+                  (file-exists-p (format "%s/%s/Scripts/activate.bat"
+                                         workon-home name)))
+          (setq result (cons name result))))
+      (sort result (lambda (a b)
+                     (string-lessp (downcase a)
+                                   (downcase b)))))))
 
 (define-widget 'pyvenv-workon 'choice
   "Select an available virtualenv from virtualenvwrapper."
-  :convert-widget (lambda (widget)
-                    (setq widget (widget-copy widget))
-                    (widget-put widget
-                                :args (cons '(const :tag "None" nil)
-                                            (mapcar (lambda (env)
-                                                      (list 'const env))
-                                                    (pyvenv-virtualenv-list))))
-                    (widget-types-convert-widget widget))
+  :convert-widget
+  (lambda (widget)
+    (setq widget (widget-copy widget))
+    (widget-put widget
+                :args (cons '(const :tag "None" nil)
+                            (mapcar (lambda (env)
+                                      (list 'const env))
+                                    (pyvenv-virtualenv-list t))))
+    (widget-types-convert-widget widget))
+
   :prompt-value (lambda (widget prompt value unbound)
                   (let ((name (completing-read
                                prompt
                                (cons "None"
-                                     (pyvenv-virtualenv-list))
+                                     (pyvenv-virtualenv-list t))
                                nil t)))
                     (if (equal name "None")
                         nil
@@ -274,7 +282,7 @@ This is usually the base name of `pyvenv-virtual-env'.")
                                  :style 'radio
                                  :selected `(equal pyvenv-virtual-env-name
                                                    ,venv)))
-                       (pyvenv-virtualenv-list))))
+                       (pyvenv-virtualenv-list t))))
     ["Activate" pyvenv-activate
      :help "Activate a virtual environment by directory"]
     ["Deactivate" pyvenv-deactivate
@@ -340,46 +348,47 @@ environment accordingly.
 
 CAREFUL! This will modify your `process-environment' and
 `exec-path'."
-  (with-temp-buffer
-    (let ((tmpfile (make-temp-file "pyvenv-virtualenvwrapper-")))
-      (unwind-protect
-          (progn
-            (apply #'call-process
-                   pyvenv-virtualenvwrapper-python
-                   nil t nil
-                   "-c"
-                   "from virtualenvwrapper.hook_loader import main; main()"
-                   "--script" tmpfile
-                   (if (getenv "HOOK_VERBOSE_OPTION")
-                       (cons (getenv "HOOK_VERBOSE_OPTION")
-                             (cons hook args))
-                     (cons hook args)))
-            (call-process-shell-command
-             (format ". '%s' ; echo ; echo =-=-= ; python -c \"import os, json ; print(json.dumps(dict(os.environ)))\""
-                     tmpfile)
-             nil t nil))
-        (delete-file tmpfile)))
-    (goto-char (point-min))
-    (when (and (not (re-search-forward "ImportError: No module named virtualenvwrapper" nil t))
-               (re-search-forward "\n=-=-=\n" nil t))
-      (let ((output (buffer-substring (point-min)
-                                      (match-beginning 0))))
-        (when (> (length output) 0)
-          (with-help-window "*Virtualenvwrapper Hook Output*"
-            (with-current-buffer "*Virtualenvwrapper Hook Output*"
-              (let ((inhibit-read-only t))
-                (erase-buffer)
-                (insert
-                 (format
-                  "Output from the virtualenvwrapper hook %s:\n\n"
-                  hook)
-                 output))))))
-      (dolist (binding (json-read))
-        (let ((env (format "%s=%s" (car binding) (cdr binding))))
-          (when (not (member env process-environment))
-            (setq process-environment (cons env process-environment))))
-        (when (eq (car binding) 'PATH)
-          (setq exec-path (split-string (cdr binding) ":")))))))
+  (when (pyvenv-hook-dir)
+    (with-temp-buffer
+      (let ((tmpfile (make-temp-file "pyvenv-virtualenvwrapper-")))
+        (unwind-protect
+            (progn
+              (apply #'call-process
+                     pyvenv-virtualenvwrapper-python
+                     nil t nil
+                     "-c"
+                     "from virtualenvwrapper.hook_loader import main; main()"
+                     "--script" tmpfile
+                     (if (getenv "HOOK_VERBOSE_OPTION")
+                         (cons (getenv "HOOK_VERBOSE_OPTION")
+                               (cons hook args))
+                       (cons hook args)))
+              (call-process-shell-command
+               (format ". '%s' ; echo ; echo =-=-= ; python -c \"import os, json ; print(json.dumps(dict(os.environ)))\""
+                       tmpfile)
+               nil t nil))
+          (delete-file tmpfile)))
+      (goto-char (point-min))
+      (when (and (not (re-search-forward "ImportError: No module named virtualenvwrapper" nil t))
+                 (re-search-forward "\n=-=-=\n" nil t))
+        (let ((output (buffer-substring (point-min)
+                                        (match-beginning 0))))
+          (when (> (length output) 0)
+            (with-help-window "*Virtualenvwrapper Hook Output*"
+              (with-current-buffer "*Virtualenvwrapper Hook Output*"
+                (let ((inhibit-read-only t))
+                  (erase-buffer)
+                  (insert
+                   (format
+                    "Output from the virtualenvwrapper hook %s:\n\n"
+                    hook)
+                   output))))))
+        (dolist (binding (json-read))
+          (let ((env (format "%s=%s" (car binding) (cdr binding))))
+            (when (not (member env process-environment))
+              (setq process-environment (cons env process-environment))))
+          (when (eq (car binding) 'PATH)
+            (setq exec-path (split-string (cdr binding) ":"))))))))
 
 ;;;###autoload
 (defun pyvenv-restart-python ()
@@ -405,6 +414,22 @@ CAREFUL! This will modify your `process-environment' and
                   "\n\n")
           (run-python cmd dedicated show)
           (goto-char (point-max)))))))
+
+(defun pyvenv-hook-dir ()
+  "Return the current hook directory.
+
+This is usually the value of $VIRTUALENVWRAPPER_HOOK_DIR, but
+virtualenvwrapper has stopped exporting that variable, so we go
+back to the default of $WORKON_HOME or even just ~/.virtualenvs/."
+  (or (getenv "VIRTUALENVWRAPPER_HOOK_DIR")
+      (pyvenv-workon-home)))
+
+(defun pyvenv-workon-home ()
+  "Return the current workon home.
+
+This is the value of $WORKON_HOME or ~/.virtualenvs."
+  (or (getenv "WORKON_HOME")
+      (expand-file-name "~/.virtualenvs")))
 
 ;;; Compatibility
 

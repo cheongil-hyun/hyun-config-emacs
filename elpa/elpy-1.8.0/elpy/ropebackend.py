@@ -37,7 +37,10 @@ class RopeBackend(object):
         super(RopeBackend, self).__init__()
         self.last_validation = 0
         if not os.path.exists(project_root):
-            project_root = ""
+            raise rpc.Fault(
+                "rope does not support files without a local project root",
+                code=400
+            )
         self.project_root = project_root
         self.completions = {}
         prefs = dict(ignored_resources=['*.pyc', '*~', '.ropeproject',
@@ -97,6 +100,7 @@ class RopeBackend(object):
         except (rope.base.exceptions.BadIdentifierError,
                 rope.base.exceptions.ModuleSyntaxError,
                 rope.base.exceptions.ResourceNotFoundError,
+                rope.base.exceptions.NameNotFoundError,
                 IndentationError,
                 LookupError,
                 AttributeError):

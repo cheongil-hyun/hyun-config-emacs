@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (elpy-version elpy-config elpy-mode elpy-enable)
-;;;;;;  "elpy" "elpy.el" (21788 35802 0 0))
+;;;;;;  "elpy" "elpy.el" (21834 16520 631999 25000))
 ;;; Generated autoloads from elpy.el
 
 (autoload 'elpy-enable "elpy" "\
@@ -19,9 +19,6 @@ This mode fully supports virtualenvs. Once you switch a
 virtualenv using \\[pyvenv-workon], you can use
 \\[elpy-rpc-restart] to make the elpy Python process use your
 virtualenv.
-
-See https://github.com/jorgenschaefer/elpy/wiki/Keybindings for a
-more structured list.
 
 \\{elpy-mode-map}
 
@@ -42,8 +39,8 @@ Display the version of Elpy.
 
 ;;;***
 
-;;;### (autoloads nil nil ("elpy-pkg.el" "elpy-refactor.el") (21788
-;;;;;;  35803 348000 0))
+;;;### (autoloads nil nil ("elpy-pkg.el" "elpy-refactor.el") (21834
+;;;;;;  16521 189044 230000))
 
 ;;;***
 
