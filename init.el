@@ -146,6 +146,9 @@
   (set-fontset-font "fontset-default" 'han '("Microsoft YaHei". "unicode-bmp"))
 )
 
+;; (set-language-environment "Korean")
+(setq default-input-method "korean-hangul")
+
 ;; ----------------------------------------------------------------------------
 ;; configuration for yasnippet
 ;; should be loaded before auto complete so that they can work together
