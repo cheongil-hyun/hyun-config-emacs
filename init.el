@@ -236,7 +236,7 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 ;; setting org files for org-agenda
-(setq org-agenda-files (list "~/org/Task.org" "~/org/Schedule.org" "~/org/notes.org"))
+(setq org-agenda-files (list "~/org/Task.org" "~/org/Schedule.org" "~/org/notes.org" "~/org/project.org"))
 
 (setq org-directory "~/org/")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
