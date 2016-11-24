@@ -11,10 +11,10 @@
 	(load-library "~/.emacs.d/packages/package.el")
 )
 (require 'package)
-;; (dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
-;; 				  ("melpa" . "http://melpa.milkbox.net/packages/")))
-;;   (add-to-list 'package-archives source t))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
 ;; ----------------------------------------------------------------------------
@@ -150,25 +150,24 @@
 (setq default-input-method "korean-hangul")
 
 ;; ----------------------------------------------------------------------------
-;; configuration for yasnippet
-;; should be loaded before auto complete so that they can work together
+;; configuration for company mode
 ;; ----------------------------------------------------------------------------
-(require 'yasnippet)
-(yas-global-mode 1)
-
-;; ----------------------------------------------------------------------------
-;; configuration for auto complete mod
-;; should be loaded after yasnippet so that they can work together
-;; ----------------------------------------------------------------------------
-(require 'auto-complete)
-(require 'auto-complete-config)
-(ac-config-default)
-;;; set the trigger key so that it can work together with yasnippet on tab key,
-;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
-;;; activate, otherwise, auto-complete will
-(global-auto-complete-mode t)
-(ac-set-trigger-key "TAB")
-(ac-set-trigger-key "<tab>")
+(require 'company)
+;; init
+(add-hook 'prog-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'company-mode)
+(add-hook 'c++-mode-hook 'company-mode)
+;; config
+(setq company-idle-delay 0.02)
+(setq company-minimum-prefix-length 1)
+(setq company-show-numbers t)
+(setq company-selection-wrap-around t)
+(setq company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance))
+(setq company-tooltip-limit 20)
+(setq company-dabbrev-downcase nil)
+(setq company-dabbrev-ignore-case t)
+(setq company-dabbrev-code-ignore-case t)
+(setq company-dabbrev-code-everywhere t)
 
 ;; ----------------------------------------------------------------------------
 ;; configuration for enablling the recurive deleting directory
@@ -178,75 +177,73 @@
 ;; ----------------------------------------------------------------------------
 ;; emacs server settings
 ;; ----------------------------------------------------------------------------
-(when (equal window-system 'w32)
-  (require 'server)
-  ;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
-  (if (equal window-system 'w32) (defun server-ensure-safe-dir (dir) "Noop" t))
-  (server-start)
-  (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
-)
-;; ----------------------------------------------------------------------------
-;; Cygwin Setting for cygwin-mount.el
-;; ----------------------------------------------------------------------------
-(when (eq window-system 'w32)
-  ;; (setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
-  ;; (setq exec-path (cons "c:/cygwin/bin/" exec-path))
-  (require 'cygwin-mount)
-  (cygwin-mount-activate)
+;; (when (equal window-system 'w32)
+;;   (require 'server)
+;;   ;; Suppress error directory ~/.emacs.d/server is unsafe on windows.
+;;   (if (equal window-system 'w32) (defun server-ensure-safe-dir (dir) "Noop" t))
+;;   (server-start)
+;;   (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
+;; )
 
-  ;; Replace the dos command window to bash of cygwin
-  (add-hook 'comint-output-filter-functions
-			'shell-strip-ctrl-m nil t)
-  (add-hook 'comint-output-filter-functions
-			'comint-watch-for-password-prompt nil t)
-  (setq explicit-shell-file-name "bash.exe")
-  ;; For subprocesses invoked via the shell
-  ;; (e.g., "shell -c command")
-  (setq shell-file-name explicit-shell-file-name)
-)
+;; ----------------------------------------------------------------------------
+;; Window Linux Utility Path Configuration
+;; ----------------------------------------------------------------------------
+(setenv "PATH" (concat "c:/Utils/cygwin64/bin;" (getenv "PATH")))
+
 ;; ----------------------------------------------------------------------------
 ;; configuration for coding system to unix default
 ;; ----------------------------------------------------------------------------
 ;; korean language setting
-(when (equal window-system 'w32)
-  (set-language-environment "Korean")
-  ;; (set-default-coding-systems 'utf-8-unix)
-  (prefer-coding-system 'euc-kr)
-  (set-default-coding-systems 'euc-kr)
-  (set-terminal-coding-system 'euc-kr)
-  (set-keyboard-coding-system 'euc-kr)
-  (set-selection-coding-system 'euc-kr)
-  (setq-default buffer-coding-system 'euc-kr)
-  (setq-default buffer-file-coding-system 'euc-kr)
-  (setq-default file-name-coding-system 'euc-kr)
-  (setq-default locale-coding-system 'euc-kr)
-  (add-hook 'sh-mode-hook'
-            (lambda ()
-              (set-default-coding-systems 'utf-8-unix)
-              ))
-  (setenv "CYGWIN" "nodosfilewarning")
-)
+;; (when (equal window-system 'w32)
+;;   (set-language-environment "Korean")
+;;   ;; (set-default-coding-systems 'utf-8-unix)
+;;   (prefer-coding-system 'euc-kr)
+;;   (set-default-coding-systems 'euc-kr)
+;;   (set-terminal-coding-system 'euc-kr)
+;;   (set-keyboard-coding-system 'euc-kr)
+;;   (set-selection-coding-system 'euc-kr)
+;;   (setq-default buffer-coding-system 'euc-kr)
+;;   (setq-default buffer-file-coding-system 'euc-kr)
+;;   (setq-default file-name-coding-system 'euc-kr)
+;;   (setq-default locale-coding-system 'euc-kr)
+;;   (add-hook 'sh-mode-hook'
+;;             (lambda ()
+;;               (set-default-coding-systems 'utf-8-unix)
+;;               ))
+;;   (setenv "CYGWIN" "nodosfilewarning")
+;; )
+
+;;------------------------------------------------------------------------
+;; null setting
+;; Prevent issues with the Windows null device (NUL)
+;; when using cygwin find with rgrep.
+;;------------------------------------------------------------------------
+(defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
+  "Use cygwin's /dev/null as the null-device."
+  (let ((null-device "/dev/null"))
+	ad-do-it))
+(ad-activate 'grep-compute-defaults)
 
 ;;------------------------------------------------------------------------
 ;; org mode Settings
 ;;------------------------------------------------------------------------
-(require 'org)
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
-;; setting org files for org-agenda
-(setq org-agenda-files (list "~/org/Task.org" "~/org/Schedule.org" "~/org/notes.org" "~/org/project.org"))
+;; (require 'org)
+;; (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+;; (define-key global-map "\C-cl" 'org-store-link)
+;; (define-key global-map "\C-ca" 'org-agenda)
+;; (setq org-log-done t)
+;; ;; setting org files for org-agenda
+;; (setq org-agenda-files (list "~/org/Task.org" "~/org/Schedule.org" "~/org/notes.org" "~/org/project.org"))
 
-(setq org-directory "~/org/")
-(setq org-default-notes-file (concat org-directory "/notes.org"))
-(define-key global-map "\C-cc" 'org-capture)
+;; (setq org-directory "~/org/")
+;; (setq org-default-notes-file (concat org-directory "/notes.org"))
+;; (define-key global-map "\C-cc" 'org-capture)
 
-(setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/org/Task.org" "Tasks")
-		 "* TODO %?\n  %i\n  %a")
-        ("i" "Ideas" entry (file+datetree "~/org/notes.org")
-		 "* %?\nIdeas %U\n  %i\n  %a")))
+;; (setq org-capture-templates
+;;       '(("t" "Todo" entry (file+headline "~/org/Task.org" "Tasks")
+;; 		 "* TODO %?\n  %i\n  %a")
+;;         ("i" "Ideas" entry (file+datetree "~/org/notes.org")
+;; 		 "* %?\nIdeas %U\n  %i\n  %a")))
 
 ;;------------------------------------------------------------------------
 ;; Dired+ Setting
@@ -256,11 +253,11 @@
 ;;------------------------------------------------------------------------
 ;; naver dictionary Settings
 ;;------------------------------------------------------------------------
-(defun search-naver-dic ()
-  (interactive)
-  (browse-url (concat "http://endic.naver.com/search.naver?mode=all&x=0&y=0&query="
-                      (thing-at-point 'word))))
-(define-key mode-specific-map "d" 'search-naver-dic)
+;; (defun search-naver-dic ()
+;;   (interactive)
+;;   (browse-url (concat "http://endic.naver.com/search.naver?mode=all&x=0&y=0&query="
+;;                       (thing-at-point 'word))))
+;; (define-key mode-specific-map "d" 'search-naver-dic)
 
 ;;------------------------------------------------------------------------
 ;; shell-pop
@@ -285,14 +282,14 @@
 (global-set-key [?\C-c ?g ?c] 'mo-git-blame-current)
 (global-set-key [?\C-c ?g ?f] 'mo-git-blame-file)
 
-;;------------------------------------------------------------------------
-;; elpy settings for python mode
-;; you should install first python, and pip
-;; sudo apt-get install python-pip
-;; sudo pip install elpy jedi rope
-;;------------------------------------------------------------------------
-(elpy-enable)
-(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
+;; ;;------------------------------------------------------------------------
+;; ;; elpy settings for python mode
+;; ;; you should install first python, and pip
+;; ;; sudo apt-get install python-pip
+;; ;; sudo pip install elpy jedi rope
+;; ;;------------------------------------------------------------------------
+;; (elpy-enable)
+;; (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 
 ;;------------------------------------------------------------------------
 ;; iedit mode
@@ -335,3 +332,17 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 98 :width normal)))))
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+	(w3m starter-kit-eshell shell-switcher popup mo-git-blame magit iedit highlight-indentation git-rebase-mode git-commit-mode find-file-in-project company))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 98 :width normal)))))
