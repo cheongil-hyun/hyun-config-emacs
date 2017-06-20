@@ -171,24 +171,30 @@ emacs-major-version 24)
 ;; ----------------------------------------------------------------------------
 ;; adding xcscope.el
 ;; ----------------------------------------------------------------------------
-(use-package xcscope
-  :load-path "~/.emacs.d/packages/"
-  :defer t
-  :init
-  (setq cscope-do-not-update-database t)  ;; do not update the cscope files
-)
+;; (use-package xcscope
+;;   :load-path "~/.emacs.d/packages/"
+;;   :defer t
+;;   :init
+;;   (setq cscope-do-not-update-database t)  ;; do not update the cscope files
+;; )
+(load-library "~/.emacs.d/packages/xcscope.el")
+(require 'xcscope)
+(setq cscope-do-not-update-database t)  ;; do not update the cscope files
 
 ;; ----------------------------------------------------------------------------
 ;; configuration for etags select
 ;; ----------------------------------------------------------------------------
-(use-package etags-select
-  :load-path "~/.emacs.d/packages/"
-  :defer t
-  :init
-  (global-set-key "\M-?" 'etags-select-find-tag-at-point)
-  (global-set-key "\M-." 'etags-select-find-tag)
-)
-
+;; (use-package etags-select
+;;   :load-path "~/.emacs.d/packages/"
+;;   :defer t
+;;   :init
+;;   (global-set-key "\M-?" 'etags-select-find-tag-at-point)
+;;   (global-set-key "\M-." 'etags-select-find-tag)
+;; )
+(load-file "~/.emacs.d/packages/etags-select.el")
+(require 'etags-select)
+(global-set-key "\M-?" 'etags-select-find-tag-at-point)
+(global-set-key "\M-." 'etags-select-find-tag)
 ;; ----------------------------------------------------------------------------
 ;; C coding style setting now linux
 ;; (setq c-default-style "k&r")
@@ -227,15 +233,22 @@ emacs-major-version 24)
 ;;------------------------------------------------------------------------
 ;; shell-pop
 ;;------------------------------------------------------------------------
-(use-package shell-pop
-  :load-path  "~/.emacs.d/packages/"
-  :defer t
-  :config
-  (shell-pop-set-internal-mode "eshell")
-  (shell-pop-set-internal-mode-shell "/bin/bash")
-  (shell-pop-set-window-height 60) ; the number for the percentage of the selected window.
-  (global-set-key [f10] 'shell-pop)
-)
+;; (use-package shell-pop
+;;   :load-path  "~/.emacs.d/packages/"
+;;   :defer t
+;;   :config
+;;   (shell-pop-set-internal-mode "eshell")
+;;   (shell-pop-set-internal-mode-shell "/bin/bash")
+;;   (shell-pop-set-window-height 60) ; the number for the percentage of the selected window.
+;;   (global-set-key [f10] 'shell-pop)
+;; )
+(load-file "~/.emacs.d/packages/shell-pop.el")
+(require 'shell-pop)
+(shell-pop-set-internal-mode "eshell")
+(shell-pop-set-internal-mode-shell "/bin/bash")
+(shell-pop-set-window-height 60) ; the number for the percentage of the selected window.
+(global-set-key [f10] 'shell-pop)
+
 ;;------------------------------------------------------------------------
 ;; shell-switcher
 ;;------------------------------------------------------------------------
