@@ -105,7 +105,14 @@ emacs-major-version 24)
 ;; C++ mode tab
 (add-hook 'c++-mode-hook'
           (lambda ()
+			(unless (or (file-exists-p "makefile")
+						(file-exists-p "Makefile"))
+			  (set (make-local-variable 'compile-command)
+				   (concat "g++ "
+						   (buffer-file-name)
+						   " -std=c++11 && ./a.out")))
             (setq default-tab-width 4)
+			(setq c-basic-offset 4)
             (setq indent-tabs-mode t) ;; no tab
             ))
 
@@ -295,7 +302,8 @@ emacs-major-version 24)
 ;; my key settings
 ;;------------------------------------------------------------------------
 (global-set-key [f11] 'list-matching-lines)
-(global-set-key [?\C-x f10] 'compile)
+;; (global-set-key [?\C-x f10] 'compile)
+(global-set-key [f4] 'compile)
 (global-set-key "\C-\]" 'vc-git-grep)
 
 ;;------------------------------------------------------------------------
